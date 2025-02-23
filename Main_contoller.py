@@ -19,11 +19,11 @@ SAVE_FOLDER = "./content/captured_frames/"
 os.makedirs(SAVE_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
 
 # Define the screen capture region (adjust based on your game window)
-SCREEN_REGION = {"top": 0, "left": 0, "width": 640, "height": 480}
+SCREEN_REGION = {"top": 640-224, "left": 480-78, "width": 224, "height": 78}
 
 # Target image size
 RESIZED_WIDTH = 224
-RESIZED_HEIGHT = 224
+RESIZED_HEIGHT = 78
 
 # Function to capture the screen
 def capture_frame():
@@ -32,18 +32,18 @@ def capture_frame():
         img = np.array(screenshot)  # Convert to NumPy array
         
         # Generate a timestamped filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")  # Example: "20250221_153045_123456"
-        filename = os.path.join(SAVE_FOLDER, f"frame_{timestamp}.png")
+        # timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")  # Example: "20250221_153045_123456"
+        # filename = os.path.join(SAVE_FOLDER, f"frame_{timestamp}.png")
 
-        # Save the image
-        cv2.imwrite(filename, img)
-        print(f"Saved: {filename}")
+        # # Save the image
+        # cv2.imwrite(filename, img)
+        # print(f"Saved: {filename}")
 
         return img
 
 # Function to preprocess image before feeding it to the model
 def preprocess_frame(frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Convert color format
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert color format
 
         # Resize image to 224x224
         frame = cv2.resize(frame, (RESIZED_WIDTH, RESIZED_HEIGHT))
@@ -52,7 +52,7 @@ def preprocess_frame(frame):
         frame = frame / 255.0
 
         # Reshape to add channel dimension (224, 224) → (224, 224, 1)
-        frame = np.expand_dims(frame, axis=-1)  
+        # frame = np.expand_dims(frame, axis=-1)  
 
         # # Add batch dimension (1, 224, 224, 1) for model input
         frame = np.expand_dims(frame, axis=0)
@@ -80,7 +80,7 @@ def get_predicted_keys(frame):
 # Main loop
 if __name__ == "__main__":
         print("Starting game automation...")
-        time.sleep(5)
+        # time.sleep(5)
         try:
                 while True:
                         # Capture the game frame
